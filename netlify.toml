@@ -1,9 +1,0 @@
-[build]
-  command = "npm run build"
-
-[build.environment]
-  NODE_VERSION = "24"
-  DATABASE_URL = "postgresql://postgres.kqrxdizkdyjwfxuvnmix:beihukasi030628@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres"
-
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
