@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Invite {
+  id             String     @id @default(uuid())
+  girlName       String     @map("girl_name")
+  dashboardToken String     @unique @map("dashboard_token")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  dates          Date[]
+  locations      Location[]
+  responses      Response[]
+}
+
+model Date {
+  id        String   @id @default(uuid())
+  inviteId   String   @map("invite_id")
+  dateLabel String   @map("date_label")
+  dateValue String   @map("date_value")
+  sortOrder Int      @default(0) @map("sort_order")
+  invite    Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  responses Response[]
+}
+
+model Location {
+  id        String   @id @default(uuid())
+  inviteId   String   @map("invite_id")
+  name      String
+  note      String?
+  createdBy String   @default("host") @map("created_by")
+  sortOrder Int      @default(0) @map("sort_order")
+  invite    Invite   @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  responses Response[]
+}
+
+model Response {
+  id                 String    @id @default(uuid())
+  inviteId            String    @map("invite_id")
+  selectedDateId     String    @map("selected_date_id")
+  selectedLocationId String?   @map("selected_location_id")
+  locationName       String?   @map("location_name")
+  locationNote       String?   @map("location_note")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  invite             Invite    @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  date               Date      @relation(fields: [selectedDateId], references: [id], onDelete: Cascade)
+  location           Location? @relation(fields: [selectedLocationId], references: [id], onDelete: SetNull)
+}
